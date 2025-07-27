@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agente de Tarefas</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      padding: 20px;
+    }
+    input, button {
+      padding: 8px;
+      font-size: 16px;
+    }
+    #mensagem {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Agente de Tarefas - Terminal</h1>
+  <p>> Digite uma tarefa:</p>
+  <input type="text" id="tarefa" placeholder="Digite a tarefa..." />
+  <button onclick="enviarTarefa()">Enviar</button>
+
+  <div id="mensagem"></div>
+
+  <script>
+    async function enviarTarefa() {
+      const tarefa = document.getElementById('tarefa').value;
+      const mensagem = document.getElementById('mensagem');
+
+      try {
+        const resposta = await fetch("https://hook.jesue.site/webhook/agendan8n", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ tarefa })
+        });
+
+        if (resposta.ok) {
+          mensagem.innerHTML = "✅ Informação recebida com sucesso.";
+          mensagem.style.color = "lime";
+        } else {
+          mensagem.innerHTML = "❌ Erro ao enviar. Status: " + resposta.status;
+          mensagem.style.color = "red";
+        }
+      } catch (erro) {
+        mensagem.innerHTML = "❌ Erro de conexão com o servidor.";
+        mensagem.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
